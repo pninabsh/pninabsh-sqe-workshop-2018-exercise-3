@@ -11,28 +11,33 @@ function deleteUnusedNodes(cfg){
     return cfg;
 }
 
-function updatePrevNode(cfgElement){
+function updatePrevNode(cfgElement, nextElement){
     for(let prevElement of cfgElement.prev) {
         if(prevElement.normal){
-            prevElement.normal = cfgElement.normal;
+            prevElement.normal = nextElement.normal;
         }
-        else if(prevElement.true === cfgElement){
-            prevElement.true = cfgElement.normal;
+        else if(prevElement.true){
+            prevElement.true = nextElement.normal;
         }
-        else if(prevElement.false === cfgElement){
-            prevElement.false = cfgElement.normal;
+        else if(prevElement.false){
+            prevElement.false = nextElement.normal;
         }
     }
 }
 
 function mergeNodes(cfg){
     let newCfg = [];
+    let minIndex = cfg.length;
     for(let i=0;i<cfg.length; i++){
         if(cfg[i].normal && cfg[i].normal.prev.length === 1 && cfg[i].normal.normal){
+            if(i < minIndex){
+                minIndex = i;
+            }
             cfg[i].normal.label = cfg[i].label + '\n' + cfg[i].normal.label;
-            updatePrevNode(cfg[i]);
+            updatePrevNode(cfg[minIndex], cfg[i]);
         }
         else{
+            minIndex = cfg.length;
             newCfg.push(cfg[i]);
         }
     }
