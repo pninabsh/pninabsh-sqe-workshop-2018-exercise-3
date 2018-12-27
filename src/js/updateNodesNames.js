@@ -74,8 +74,11 @@ function getRepresentingString(astNode){
 }
 
 function updateNodesLabels(cfg){
+    let counter = 1;
     for(let node of cfg){
         node.label = getRepresentingString(node.astNode);
+        node.xlabel = counter;
+        counter++;
     }
 }
 export {updateNodesLabels};
