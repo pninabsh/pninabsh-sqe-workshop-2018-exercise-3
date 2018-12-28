@@ -20,27 +20,17 @@ function replaceNodeWithMultipleAccess(lines){
     return result;
 }
 
-function handleNodeLine(line, conditions, counter, variableValues){
+function handleNodeLine(line, conditions, counter, flowNodes){
     let splittedLineArray = line.split(/\s\[/);
     let nodeName = splittedLineArray[0];
     let splittenLabel = splittedLineArray[1].split(/="/);
     let nodeValue = splittenLabel[1];
     //additional circle empty node
     if(!nodeValue){
-        return nodeName + '=>' + 'end' + ': ' + 'split\n';
+        return nodeName + '=>' + 'end' + ': ' + 'split|split\n';
     }
-    let nodeType;
-    let nodeColor = '';
-    if(conditions.includes(nodeName)){
-        nodeType = 'condition';
-        let variableValuesWithCondition = variableValues + nodeValue.substring(0, nodeValue.length - 1);
-        if(eval(variableValuesWithCondition)){
-            nodeColor = '|current';
-        }
-    }
-    else{
-        nodeType = 'operation';
-    }
+    let nodeType = conditions.includes(nodeName)? 'condition' : 'operation';
+    let nodeColor = flowNodes.includes(nodeName)? '|current' : '';
     return nodeName + '=>' + nodeType + ': ' + '(' + counter + ')\n' + nodeValue.substring(0, nodeValue.length - 1) + nodeColor +  '\n';
 }
 
@@ -68,7 +58,7 @@ function hanleTransitions(line, conditions, replaceNodesArray){
     return firstNode + condition +  '->'+ secondNode + '\n' + additionalTransition;
 }
 
-export function formCfgGraph (cfgDotResult, variableValues) {
+export function formCfgGraph (cfgDotResult, greenNodes) {
     let nodesString = '';
     let transitionString = '';
     let conditions = [];
@@ -82,7 +72,7 @@ export function formCfgGraph (cfgDotResult, variableValues) {
     }
     for(let line of lines){
         if(line.indexOf('->') == -1 && line !== ''){
-            nodesString += handleNodeLine(line, conditions, counter, variableValues);
+            nodesString += handleNodeLine(line, conditions, counter, greenNodes);
             counter++;
         }
     }

@@ -4,6 +4,7 @@ import {getParamsValues, resetParamValues, handleFunction, turnVeariableValueArr
 import {updateNodesLabels} from './updateNodesNames';
 import {cleanCFGGraph} from './nodesHandling';
 import {formCfgGraph} from './createGraph';
+import {getGreenNodes} from './colorCreation';
 import * as flowchart from 'flowchart.js';
 const esgraph = require('esgraph');
 
@@ -19,10 +20,12 @@ $(document).ready(function () {
         let variableValues = handleFunction(parsedCode.body[0], paramValues);
         updateNodesLabels(cfg[2], variableValues);
         cfg[2] = cleanCFGGraph(cfg[2]);
+        let variableValuesString = turnVeariableValueArrayToString(variableValues);
+        let greenNodes = getGreenNodes(cfg[2], variableValuesString);
         const cfgDotResult = esgraph.dot(cfg);
         $('#parsedCode').val(cfgDotResult);
-        let diagram = flowchart.parse(formCfgGraph(cfgDotResult, turnVeariableValueArrayToString(variableValues)));
+        let diagram = flowchart.parse(formCfgGraph(cfgDotResult, greenNodes));
         diagram.drawSVG('diagram', {'flowstate' : {
-            'current' : {'fill' : 'green'},}});
+            'current' : {'fill' : 'green'}, 'split' : {'fill': 'green'  , 'font-color' : 'green'}}});
     });
 });
