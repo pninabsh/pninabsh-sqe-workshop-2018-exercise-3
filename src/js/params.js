@@ -4,6 +4,17 @@ export function resetParamValues(){
     paramValues = [];
 }
 
+export function handleFunction(exp, paramsValue){
+    let variableValues = [];
+    let i = 0;
+    for (let param of exp.params) {
+        let varValueString = 'var ' + param.name + ' = ' + paramsValue[i];
+        variableValues.push(varValueString);
+        i++;
+    }
+    return variableValues;
+}
+
 export function getParamsValues(paramsString){
     const i = 0;
     if(paramsString.length > 0 && paramsString.charAt(i) === ' '){
@@ -15,6 +26,7 @@ export function getParamsValues(paramsString){
     else{
         handleRegularLiteral(paramsString, i);
     }
+    return paramValues;
 }
 
 function handleArray(paramsString, i){
@@ -33,4 +45,12 @@ function handleRegularLiteral(paramsString, i){
         paramValues.push(paramsString.substring(0, i));
         getParamsValues(paramsString.substring(i + 1));
     }
+}
+
+export function turnVeariableValueArrayToString(variableValues){
+    let stringRes = '';
+    for(let variableValue of variableValues){
+        stringRes = stringRes + variableValue + '\n';
+    }
+    return stringRes;
 }

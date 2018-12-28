@@ -29,13 +29,17 @@ function handleArrayExpression(astNode){
     return '[' + valuesArrays.join(',') + ']';
 }
 
-function handleVariableDeclaration(astNode){
+function handleVariableDeclaration(astNode, variableValues){
     let declaration = astNode.declarations[0];
-    return declaration.id.name + (declaration.init == null ? '' : ' = ' + getRepresentingString(declaration.init));
+    let declarationString = declaration.id.name + (declaration.init == null ? '' : ' = ' + getRepresentingString(declaration.init));
+    variableValues.push('let ' + declarationString);
+    return declarationString;
 }
 
-function handleExpressionStatement(astNode){
-    return getRepresentingString(astNode.expression.left) + ' = ' + getRepresentingString(astNode.expression.right);
+function handleExpressionStatement(astNode, variableValues){
+    let expressionString = getRepresentingString(astNode.expression.left) + ' = ' + getRepresentingString(astNode.expression.right);
+    variableValues.push(expressionString);
+    return expressionString;
 }
 
 function handleReturnStatement(astNode){
@@ -66,19 +70,16 @@ function handleBinaryExpression(astNode){
     return getRepresentingString(astNode.left) + ' ' + astNode.operator + ' ' + getRepresentingString(astNode.right);
 }
 
-function getRepresentingString(astNode){
+function getRepresentingString(astNode, variableValues){
     if(astNode){
-        return handleAstNodesExpression[astNode.type](astNode);
+        return handleAstNodesExpression[astNode.type](astNode, variableValues);
     }
     return '';
 }
 
-function updateNodesLabels(cfg){
-    let counter = 1;
+function updateNodesLabels(cfg, variableValues){
     for(let node of cfg){
-        node.label = getRepresentingString(node.astNode);
-        node.xlabel = counter;
-        counter++;
+        node.label = getRepresentingString(node.astNode, variableValues);
     }
 }
 export {updateNodesLabels};
