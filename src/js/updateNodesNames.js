@@ -3,7 +3,6 @@ const handleAstNodesExpression = {
     Identifier: handleIdentifier,
     UpdateExpression: handleUpdateExpression,
     ArrayExpression: handleArrayExpression,
-    ExpressionStatement: handleExpressionStatement,
     VariableDeclaration: handleVariableDeclaration,
     BinaryExpression: handleBinaryExpression,
     UnaryExpression: handleUnaryExpression,
@@ -13,8 +12,8 @@ const handleAstNodesExpression = {
     BlockStatement: handleUnnecessaryTypes
 };
 
-function handleUnnecessaryTypes(astNode){
-    return 'BlockStatement' + astNode;
+function handleUnnecessaryTypes(){
+    return 'BlockStatement';
 }
 
 function handleAssignmentExpression(astNode){
@@ -34,12 +33,6 @@ function handleVariableDeclaration(astNode, variableValues){
     let declarationString = declaration.id.name + (declaration.init == null ? '' : ' = ' + getRepresentingString(declaration.init));
     variableValues.push('let ' + declarationString);
     return declarationString;
-}
-
-function handleExpressionStatement(astNode, variableValues){
-    let expressionString = getRepresentingString(astNode.expression.left) + ' = ' + getRepresentingString(astNode.expression.right);
-    variableValues.push(expressionString);
-    return expressionString;
 }
 
 function handleReturnStatement(astNode){

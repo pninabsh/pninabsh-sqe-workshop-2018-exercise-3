@@ -9,16 +9,12 @@ function handleNormalNode(cfg, node, variableValues, greenNodes){
 }
 
 function handleTrueFalseNode(cfg, node, variableValues, greenNodes){
-    if(node.astNode.type === 'ReturnStatement'){
-        greenNodes.push('n' + cfg.indexOf(node));
-        return;
-    }
     greenNodes.push('n' + cfg.indexOf(node));
     eval(variableValues + node.label + '\n') ? colorNode(cfg, node.true, variableValues, greenNodes) : colorNode(cfg, node.false, variableValues, greenNodes);
 }
 
 function colorNode(cfg, node, variableValues, greenNodes){
-    if(node.normal){
+    if(node.normal || node.astNode.type === 'ReturnStatement'){
         handleNormalNode(cfg, node, variableValues, greenNodes);
     }
     else{

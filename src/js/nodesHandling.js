@@ -19,18 +19,22 @@ function updatePrevNode(cfgElement, nextElement){
         else if(prevElement.true === nextElement){
             prevElement.true = nextElement.normal;
         }
-        else if(prevElement.false === nextElement){
+        else{
             prevElement.false = nextElement.normal;
         }
     }
 
 }
 
+function checkConditionsForMerge(cfg, i){
+    return cfg[i].normal.prev.length === 1 && (cfg[i].normal.normal && (cfg[i].parent === cfg[i].normal.parent || !cfg[i].parent)) ? true : false;
+}
+
 function mergeNodes(cfg){
     let newCfg = [];
     let minIndex = cfg.length;
     for(let i=0;i<cfg.length; i++){
-        if(cfg[i].normal && cfg[i].normal.prev.length === 1 && cfg[i].normal.normal && (cfg[i].parent === cfg[i].normal.parent || !cfg[i].parent)){
+        if(cfg[i].normal && checkConditionsForMerge(cfg, i)){
             if(i < minIndex){
                 minIndex = i;
             }

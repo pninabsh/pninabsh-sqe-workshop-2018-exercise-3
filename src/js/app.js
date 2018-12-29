@@ -25,7 +25,6 @@ $(document).ready(function () {
         const cfgDotResult = esgraph.dot(cfg);
         $('#parsedCode').val(cfgDotResult);
         let diagram = flowchart.parse(formCfgGraph(cfgDotResult, greenNodes));
-        diagram.drawSVG('diagram', {'flowstate' : {
-            'current' : {'fill' : 'green'}, 'split' : {'fill': 'green'  , 'font-color' : 'green'}}});
+        diagram.drawSVG('diagram', {'flowstate' : {'current' : {'fill' : 'green'}, 'split' : {'fill': 'green'  , 'font-color' : 'green'}}});
     });
 });
